@@ -9,7 +9,7 @@ BioKG requires python3.7 or greater to run
 
 ## Clone the repo
 ```
-git clone https://github.com/dsi-bdi/biokg.git
+git clone https://github.com/matteo01bonato01/biokg.git
 cd biokg
 ```
 
