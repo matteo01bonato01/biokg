@@ -121,7 +121,8 @@ def download_file_with_auth(url, local_path, username, password, checksum=None):
     file_name = url.split('/')[-1]
     tmp_file = os.path.join(tmp_dir, file_name)
     
-    with requests.get(url, auth={username, password}) as r:
+    with requests.get(url, auth=(username, password)) as r:
+        print("Accendendo con: " + username + " e " + password + "\n")
         if r.status_code == 200:
             with open(tmp_file, 'wb') as out:
                 for bits in r.iter_content():
