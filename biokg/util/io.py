@@ -13,7 +13,7 @@ from os import mkdir
 import requests
 from .extras import *
 
-from urlparse import urlparse   #added by Matteo
+from urllib.parse import urlparse   #added by Matteo
 
 def download_file_with_cert(url, local_path, checksum=None, cert=None):
     """
