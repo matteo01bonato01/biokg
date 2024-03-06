@@ -122,7 +122,7 @@ def download_file_with_auth(url, local_path, username, password, checksum=None):
     tmp_file = os.path.join(tmp_dir, file_name)
     
     with requests.get(url, auth=(username, password)) as r:
-        print("Accendendo con: " + username + " e " + password + "\n")
+        print("Accedendo con: " + username + " e " + password + " per il file di nome " + file_name + " stop\n")
         if r.status_code == 200:
             with open(tmp_file, 'wb') as out:
                 for bits in r.iter_content():
