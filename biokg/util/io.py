@@ -13,6 +13,7 @@ from os import mkdir
 import requests
 from .extras import *
 
+from urlparse import urlparse   #added by Matteo
 
 def download_file_with_cert(url, local_path, checksum=None, cert=None):
     """
@@ -244,7 +245,15 @@ def download_file_md5_check(download_url, filepath, username=None, password=None
         if username is None or password is None:
             download_file(download_url, filepath)
         else:
-            download_file(username, password, download_url, filepath) #download_file_with_auth
+            #download_file_with_auth(download_url, filepath, username, password)
+
+            r = requests.get(download_url, auth=(username,password))
+
+            if r.status_code == 200:
+                with open(filepath, 'wb') as out:
+                     for bits in r.iter_content():
+                         out.write(bits)
+            
         download_time = timer() - start
         print(done_sym + " %1.2f Seconds." % download_time, end="", flush=True)
         file_computed_md5 = get_file_md5(filepath)
