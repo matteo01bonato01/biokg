@@ -246,11 +246,15 @@ def download_file_md5_check(download_url, filepath, username=None, password=None
             download_file(download_url, filepath)
         else:
             #download_file_with_auth(download_url, filepath, username, password)
-
+            # create a temporary file to download to
+            #tmp_dir = gettempdir()
+            #file_name = url.split('/')[-1]
+            #tmp_file = os.path.join(tmp_dir, file_name)
+            tmp_file = os.path.join(filepath, 'drugbank_all_full_database.xml.zip')  #NUOVO by Matteo
             r = requests.get(download_url, auth=(username,password))
 
             if r.status_code == 200:
-                with open(filepath, 'wb') as out:
+                with open(tmp_file, 'wb') as out:
                      for bits in r.iter_content():
                          out.write(bits)
             
