@@ -125,12 +125,12 @@ def download_file_with_auth(url, local_path, username, password, checksum=None):
     with requests.get(url, auth=(username, password)) as r:
         print("Accedendo con: " + username + " e " + password + " con url "
               + url + " e tmp_file " + tmp_file + "\nStop\n")
-        if r.status_code == 200:
-            with open(tmp_file, 'wb') as out:
-                for bits in r.iter_content():
-                    out.write(bits)
-        else:
-            raise ValueError(f'Error downloading {url} status: {r.status_code}')
+        #if r.status_code == 200:
+        with open(tmp_file, 'wb') as out:
+            for bits in r.iter_content():
+                out.write(bits)
+        """else:
+            raise ValueError(f'Error downloading {url} status: {r.status_code}')"""
     # check the checksum if provided
     if not (checksum is None):
         # compute the checksum of the file
