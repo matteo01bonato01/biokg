@@ -123,7 +123,8 @@ def download_file_with_auth(url, local_path, username, password, checksum=None):
     tmp_file = os.path.join(tmp_dir, file_name)
     
     with requests.get(url, auth=(username, password)) as r:
-        print("Accedendo con: " + username + " e " + password + " per il file di nome " + file_name + " stop\n")
+        print("Accedendo con: " + username + " e " + password + " con url "
+              + url + " e tmp_file " + tmp_file + "\nStop\n")
         if r.status_code == 200:
             with open(tmp_file, 'wb') as out:
                 for bits in r.iter_content():
@@ -245,19 +246,21 @@ def download_file_md5_check(download_url, filepath, username=None, password=None
         if username is None or password is None:
             download_file(download_url, filepath)
         else:
-            #download_file_with_auth(download_url, filepath, username, password)
+            print("Accedendo con: " + username + " e " + password + " con download_url "
+              + download_url + " e filepath " + filepath + "\nStop\n")
+            download_file_with_auth(download_url, filepath, username, password)
             # create a temporary file to download to
             #tmp_dir = gettempdir()
             #file_name = url.split('/')[-1]
             #tmp_file = os.path.join(tmp_dir, file_name)
-            tmp_file = os.path.join(filepath, 'drugbank_all_full_database.xml.zip')  #NUOVO by Matteo
+            """tmp_file = os.path.join(filepath, 'drugbank_all_full_database.xml.zip')  #NUOVO by Matteo
             r = requests.get(download_url, auth=(username,password))
 
             if r.status_code == 200:
                 with open(tmp_file, 'wb') as out:
                      for bits in r.iter_content():
                          out.write(bits)
-            
+            """
         download_time = timer() - start
         print(done_sym + " %1.2f Seconds." % download_time, end="", flush=True)
         file_computed_md5 = get_file_md5(filepath)
