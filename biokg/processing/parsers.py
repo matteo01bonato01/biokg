@@ -1199,24 +1199,30 @@ class DrugBankParser:
                     (bcolors.OKGREEN + filepath + "/" + filename + bcolors.ENDC))
                 start = timer()
                 nb_entries = 0
-                for event, elem in ET.iterparse(xmlfile):
-                    # Check the length of the drug element as pathways also contain drug elements
-                    if elem.tag=='{http://www.drugbank.ca}drug' and len(elem) > 2:
-                        nb_entries += 1
-                        if nb_entries % 5 == 0:
-                            speed = nb_entries / (timer() - start)
-                            msg = prc_sym + "Processed (%d) entries.  Speed: (%1.5f) entries/second" % (nb_entries, speed)
-                            print("\r" + msg, end="", flush=True)
-                        self.__parse_drug(elem, output_writers)
-                        elem.clear()
 
+                try:
+                    for event, elem in ET.iterparse(xmlfile):
+                        # Check the length of the drug element as pathways also contain drug elements
+                        if elem.tag=='{http://www.drugbank.ca}drug' and len(elem) > 2:
+                            nb_entries += 1
+                            if nb_entries % 5 == 0:
+                                speed = nb_entries / (timer() - start)
+                                msg = prc_sym + "Processed (%d) entries.  Speed: (%1.5f) entries/second" % (nb_entries, speed)
+                                print("\r" + msg, end="", flush=True)
+                            self.__parse_drug(elem, output_writers)
+                            elem.clear()
+                except:
+                    print("errore in lettura ma procede")
                         # Flush the output buffers
-                        for writer in output_writers.values():
-                            writer.flush()
+                        """for writer in output_writers.values():
+                            writer.flush()"""
                 print(done_sym + " Took %1.2f Seconds." % (timer() - start), flush=True)
         
-        for writer in output_writers.values():
-            writer.close()
+        try:
+            for writer in output_writers.values():
+                writer.close()
+        except:
+            print("errore writer flush")
 
 
 class KeggParser:
@@ -1471,8 +1477,11 @@ class KeggParser:
         for db in self._kegg_dbs_select:
             output_fd  = None
             for organism in organisms:
-                link_uri = f'{self._base_uri}/{organism}/{db}'
-                output_fd = self.__parse_uri_triples(link_uri, output_fd)
+                try:
+                    link_uri = f'{self._base_uri}/{organism}/{db}'
+                    output_fd = self.__parse_uri_triples(link_uri, output_fd)
+                except:
+                    print("errore in organism parse uri triples")
                 nb_endpoints += 1
 
                 if nb_endpoints % 5 == 0:
@@ -3157,26 +3166,31 @@ class MESHParser():
         drug_writer = SetWriter(join(output_dp, 'mesh_drug_tree.txt'))
         disease_link_writer = SetWriter(join(output_dp, 'mesh_disease_concept_heading.txt'))
         drug_link_writer = SetWriter(join(output_dp, 'mesh_drug_concept_heading.txt'))
-        with open(desc_fp, 'r') as source_fd:
-            for line in source_fd:
-                if len(line.strip()) == 0:
-                    nb_entries += 1
-                    self.parse_mesh_entry(current_entry, dis_meta_writer, drg_meta_writer, tree_writer, drug_writer)
-                    current_entry = []
-                else:
-                    current_entry.append(line.strip())
+        try:
+            with open(desc_fp, 'r') as source_fd:
+                for line in source_fd:
+                    if len(line.strip()) == 0:
+                        nb_entries += 1
+                        self.parse_mesh_entry(current_entry, dis_meta_writer, drg_meta_writer, tree_writer, drug_writer)
+                        current_entry = []
+                    else:
+                        current_entry.append(line.strip())
+        except:
+            print("errore in mesh diseas and concept")
 
-
-        self._parse_mesh_supplementary_concepts(supp_fp, scr_dis_meta_writer, scr_drg_meta_writer, disease_link_writer, drug_link_writer)
-        dis_meta_writer.close()
-        drg_meta_writer.close()
-        scr_dis_meta_writer.close()
-        scr_drg_meta_writer.close()
-        tree_writer.close()
-        drug_writer.close()
-        disease_link_writer.close()
-        drug_link_writer.close()
-        print(done_sym + "Processed (%d) files. Took %1.2f Seconds." % (nb_entries, timer() - start), flush=True)
+        try:
+            self._parse_mesh_supplementary_concepts(supp_fp, scr_dis_meta_writer, scr_drg_meta_writer, disease_link_writer, drug_link_writer)
+            dis_meta_writer.close()
+            drg_meta_writer.close()
+            scr_dis_meta_writer.close()
+            scr_drg_meta_writer.close()
+            tree_writer.close()
+            drug_writer.close()
+            disease_link_writer.close()
+            drug_link_writer.close()
+            print(done_sym + "Processed (%d) files. Took %1.2f Seconds." % (nb_entries, timer() - start), flush=True)
+        except:
+            print("errore nella chiusura dei writer di mesh")
 
 
 class MedgenParser():
