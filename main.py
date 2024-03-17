@@ -63,14 +63,14 @@ def preprocess_graph():
     # download sider source data
     download_medgen_data(sources_dp=sources_dp, srcs_cp=sources_urls)
     # download drugbank source data
-    if len(sys.argv) >= 3:
+    """if len(sys.argv) >= 3:
         db_user = sys.argv[1]
         db_pass = sys.argv[2]
         download_drugbank_data(sources_dp=sources_dp, srcs_cp=sources_urls, username=db_user, password=db_pass)
     elif 'DB_USER' in environ and 'DB_PASS' in environ:
         db_user = environ['DB_USER']
         db_pass = environ['DB_PASS']
-        download_drugbank_data(sources_dp=sources_dp, srcs_cp=sources_urls, username=db_user, password=db_pass)
+        download_drugbank_data(sources_dp=sources_dp, srcs_cp=sources_urls, username=db_user, password=db_pass)"""
     # download kegg source data
     download_kegg_data(sources_dp=sources_dp, srcs_cp=sources_urls)
 
